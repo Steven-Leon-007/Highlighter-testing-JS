@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <link rel="stylesheet" href="./styles.css">
+</head>
+
+<body>
+    <div id="some-content">
+        <h1>This is a test</h1>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi error asperiores minima consequuntur odit
+            officiis autem animi, quas temporibus earum voluptas dolorem repellendus optio incidunt aliquid atque
+            expedita? Quo, quibusdam.
+            Tempore voluptatibus nesciunt obcaecati sequi! Exercitationem voluptatum tempora error. Magnam laborum, modi
+            quam, vitae nesciunt eum expedita accusantium cum sunt possimus natus repudiandae commodi dolorum repellat
+            nobis illum quisquam eligendi?
+            Aspernatur magni repudiandae earum, necessitatibus ex voluptate deserunt sequi rerum! Eius dignissimos
+            labore tenetur fuga dicta mollitia aliquid, nesciunt praesentium non earum ex voluptas, voluptatibus illo
+            eos impedit molestiae reprehenderit?</p>
+        <table>
+            <tr>
+                <td>
+                    <p>1</p>
+                </td>
+                <td>
+                    <p>2</p>
+                </td>
+                <td>
+                    <p>3</p>
+                </td>
+            </tr>
+            <tr>
+                <td>asasa</td>
+                <td>kfjjgkj</td>
+                <td>kgkjdjk</td>
+            </tr>
+        </table>
+    </div>
+    <div class="highlighter-container" data-color="all">
+        <ul class="hide" id="colors-container">
+            <li><button data-color="blue-color"></button></li>
+            <li><button data-color="yellow-color"></button></li>
+            <li><button data-color="green-color"></button></li>
+            <li><button data-color="orange-color"></button></li>
+            <li><button data-color="red-color"></button></li>
+            <li><button data-color="delete-highlight"></button></li>
+            <li><button data-color="turn-transparent"></button></li>
+        </ul>
+
+        <button class="brush-button">
+            <?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+            <svg viewBox="0 0 24 24" id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg"
+                class="paintbrush-svg">
+                <defs>
+                    <style>
+                        .cls-1 {
+                            fill: none;
+                            stroke: #020202;
+                            stroke-miterlimit: 10;
+                            stroke-width: 1.95px;
+                        }
+                    </style>
+                </defs>
+                <rect class="cls-1" x="7.54" y="5.07" width="13.81" height="8.98"
+                    transform="translate(10.99 -7.41) rotate(45)" />
+                <path class="cls-1"
+                    d="M16.15,17.62,14.6,19.17a2,2,0,0,1-2.76,0l-2-2L5,21.89a2.08,2.08,0,0,1-1.47.61h0A2.07,2.07,0,0,1,1.5,20.43h0A2.08,2.08,0,0,1,2.11,19L6.87,14.2l-2-2a2,2,0,0,1,0-2.76L6.38,7.85Z" />
+                <line class="cls-1" x1="15.66" y1="4.43" x2="11.27" y2="8.83" />
+            </svg>
+        </button>
+    </div>
+    <script type="text/javascript" src="highlighter.js"></script>
+    <script>
+        // Lets try with library, because make a vanilla implementation could be worse
+        let defaultHighlights = [];
+        let highlighter = null;
+        const colorPicker = document.querySelector("#colors-container");
+
+        function renderHighlights(colorSelected, onHighlightArray, allHighlights, isFromBrushButton = false) {
+            if (highlighter && !isFromBrushButton) {
+                highlighter.removeHighlights();
+            }
+
+            highlighter = Highlighter(document.getElementById("some-content"), colorSelected);
+            highlighter.renderHighlights(onHighlightArray);
+
+            highlighter.onHighlight((highlight) => {
+                highlight.highlightColor = colorSelected;
+                highlighter.renderHighlights(highlight);
+                allHighlights.push(highlight);
+            });
+        }
+
+        colorPicker.addEventListener("click", (event) => {
+            if (event.target.tagName === "BUTTON") {
+                // Remove border style from all buttons
+                const buttons = document.querySelectorAll("#colors-container button");
+                buttons.forEach((button) => {
+                    button.style.border = "";
+                });
+
+                // Set border style on clicked button
+                event.target.style.border = "1px solid #000";
+
+                const color = event.target.dataset.color;
+                let onlyDisplayColors = [];
+                switch (color) {
+                    case "blue-color":
+                        onlyDisplayColors = defaultHighlights.filter(
+                            (hl) => hl.highlightColor === "blue-color"
+                        );
+                        renderHighlights("blue-color", onlyDisplayColors, defaultHighlights);
+                        break;
+                    case "yellow-color":
+                        onlyDisplayColors = defaultHighlights.filter(
+                            (hl) => hl.highlightColor === "yellow-color"
+                        );
+                        renderHighlights("yellow-color", onlyDisplayColors, defaultHighlights);
+                        break;
+                    case "green-color":
+                        onlyDisplayColors = defaultHighlights.filter(
+                            (hl) => hl.highlightColor === "green-color"
+                        );
+                        renderHighlights("green-color", onlyDisplayColors, defaultHighlights);
+                        break;
+                    case "orange-color":
+                        onlyDisplayColors = defaultHighlights.filter(
+                            (hl) => hl.highlightColor === "orange-color"
+                        );
+                        renderHighlights("orange-color", onlyDisplayColors, defaultHighlights);
+                        break;
+                    case "red-color":
+                        onlyDisplayColors = defaultHighlights.filter(
+                            (hl) => hl.highlightColor === "red-color"
+                        );
+                        renderHighlights("red-color", onlyDisplayColors, defaultHighlights);
+                        break;
+                    case "turn-transparent":
+                        onlyDisplayColors = defaultHighlights.filter(
+                            (hl) => hl.highlightColor === "turn-transparent"
+                        );
+                        renderHighlights("turn-transparent", defaultHighlights, defaultHighlights);
+                        break;
+                    case "delete-highlight":
+                        renderHighlights("delete-highlight", defaultHighlights, defaultHighlights);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+
+        const highlighterContainer = document.querySelector(".highlighter-container");
+
+        highlighterContainer.addEventListener("click", (event) => {
+            if (
+                event.target.classList.contains("brush-button") ||
+                event.target.closest(".brush-button")
+            ) {
+                brushButton();
+            }
+        });
+
+        function brushButton() {
+            for (const highlight of defaultHighlights) {
+                switch (highlight.highlightColor) {
+                    case "blue-color":
+                        onlyDisplayColors = defaultHighlights.filter(
+                            (hl) => hl.highlightColor === "blue-color"
+                        );
+                        renderHighlights("blue-color", onlyDisplayColors, defaultHighlights, true);
+                        break;
+                    case "yellow-color":
+                        onlyDisplayColors = defaultHighlights.filter(
+                            (hl) => hl.highlightColor === "yellow-color"
+                        );
+                        renderHighlights("yellow-color", onlyDisplayColors, defaultHighlights, true);
+                        break;
+                    case "green-color":
+                        onlyDisplayColors = defaultHighlights.filter(
+                            (hl) => hl.highlightColor === "green-color"
+                        );
+                        renderHighlights("green-color", onlyDisplayColors, defaultHighlights, true);
+                        break;
+                    case "orange-color":
+                        onlyDisplayColors = defaultHighlights.filter(
+                            (hl) => hl.highlightColor === "orange-color"
+                        );
+                        renderHighlights("orange-color", onlyDisplayColors, defaultHighlights, true);
+                        break;
+                    case "red-color":
+                        onlyDisplayColors = defaultHighlights.filter(
+                            (hl) => hl.highlightColor === "red-color"
+                        );
+                        renderHighlights("red-color", onlyDisplayColors, defaultHighlights, true);
+                        break;
+                    case "turn-transparent":
+                        onlyDisplayColors = defaultHighlights.filter(
+                            (hl) => hl.highlightColor === "turn-transparent"
+                        );
+                        renderHighlights("turn-transparent", onlyDisplayColors, defaultHighlights, true);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+
+    </script>
+
+</body>
+
+</html>

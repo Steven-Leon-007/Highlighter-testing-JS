@@ -1,0 +1,123 @@
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.paintbrush-svg{
+    width: 30px;
+    height: 30px;
+}
+
+.hide li {
+    list-style: none;
+}
+
+.brush-button,
+.hide li button {
+    width: 50px;
+    height: 50px;
+    background-color: transparent;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.highlighter-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding-left: 2rem;
+}
+
+.blue-color {
+    background-color: #2cbcff9b;
+}
+
+.yellow-color {
+    background-color: #f5ee279b;
+}
+
+.green-color {
+    background-color: #3adb429b;
+}
+
+.orange-color {
+    background-color: #ff831e9b;
+}
+
+.red-color {
+    background-color: #ff2f2f9b;
+}
+
+.turn-transparent {
+    background-color: white;
+}
+
+.is-tooltip {
+    position: absolute;
+    background-color: #77d3de;
+    border: 1px solid #828282;
+    border-radius: 3px;
+    padding: 8px 10px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    cursor: pointer;
+    transition: box-shadow, background-color 0.3s ease-in-out;
+}
+
+.is-tooltip:hover {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    background-color: #8FE8F2;
+}
+
+.hide {
+    display: none;
+}
+
+.hide li {
+    padding: 2px 0 5px;
+}
+
+.hide li:nth-child(7) {
+    padding-bottom: 6px;
+}
+
+.hide li:nth-child(1) button {
+    background-color: #2cbcff;
+}
+
+.hide li:nth-child(2) button {
+    background-color: #eee20c;
+}
+
+.hide li:nth-child(3) button {
+    background-color: #39cb15;
+}
+
+.hide li:nth-child(4) button {
+    background-color: #e85805;
+}
+
+.hide li:nth-child(5) button {
+    background-color: #c50404;
+}
+
+.hide li:nth-child(6) button {
+    background-image: url(transparency-grid.svg);
+    background-size: contain;
+}
+
+.hide li:nth-child(7) button {
+    background-image: url(dissapear-clear.svg);
+    background-size: 32px;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.palette-selected {
+    cursor: text;
+}
+
+.highlighter-container:hover>.hide {
+    display: inline;
+}
