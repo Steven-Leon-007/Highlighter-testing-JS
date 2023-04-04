@@ -50,13 +50,36 @@ body {
     background-color: #ff2f2f9b;
 }
 
-.turn-transparent {
-    background-color: white;
+.turn-transparent{
+    background-color: transparent;
+}
+
+.blue-color-button {
+    background-color: #39bdfb;
+}
+
+.yellow-color-button {
+    background-color: #dad322;
+}
+
+.green-color-button {
+    background-color: #34c33b;
+}
+
+.orange-color-button {
+    background-color: #df7219;
+}
+
+.red-color-button {
+    background-color: #dc2828;
+}
+
+.delete-highlight-button {
+    background-color: #bfb0b0;
 }
 
 .is-tooltip {
     position: absolute;
-    background-color: #77d3de;
     border: 1px solid #828282;
     border-radius: 3px;
     padding: 8px 10px;
@@ -67,7 +90,6 @@ body {
 
 .is-tooltip:hover {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-    background-color: #8FE8F2;
 }
 
 .hide {

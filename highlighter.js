@@ -1,6 +1,131 @@
-function Highlighter(paperEl, highlightClass="is-highlighted") {
-    
-    function generateTree(node, idx=0) {
+// Lets try with library, because make a vanilla implementation could be worse
+let defaultHighlights = [];
+let highlighter = null;
+let colorButtonKeeper = "";
+const colorPicker = document.querySelector("#colors-container");
+
+function renderHighlights(colorSelected, onHighlightArray, allHighlights, isFromBrushButton = false) {
+    if (highlighter && !isFromBrushButton) {
+        highlighter.removeHighlights();
+    }
+
+    highlighter = Highlighter(document.getElementById("some-content"), colorSelected);
+
+    colorButtonKeeper = colorSelected;
+    if (colorSelected === "turn-transparent") {
+        transparentHighlights();
+    }
+
+    else {
+        highlighter.renderHighlights(onHighlightArray);
+        highlighter.onHighlight((highlight) => {
+            if (colorSelected === "delete-highlight") {
+                for (const findForHighlight of defaultHighlights) {
+                    if (findForHighlight.start === highlight.start && findForHighlight.end === highlight.end) {
+                        const indexToDelete = defaultHighlights.findIndex(obj => obj.start === highlight.start);
+                        defaultHighlights.splice(indexToDelete, 1);
+                    }
+                    else if (highlight.start >= findForHighlight.start && highlight.end <= findForHighlight.end) {
+                        const indexToDelete = defaultHighlights.findIndex(obj => highlight.start >= obj.start && highlight.end <= obj.end);
+                        defaultHighlights.splice(indexToDelete, 1);
+                    }
+                }
+            }
+            highlight.highlightColor = colorSelected;
+            highlighter.renderHighlights(highlight);
+            allHighlights.push(highlight);
+        }, colorSelected);
+    }
+}
+
+function transparentHighlights() {
+    const highlightedElements = document.querySelectorAll('[class*="color"]');
+    highlightedElements.forEach(el => {
+        const parent = el.parentNode;
+        const textNode = document.createTextNode(el.textContent);
+        parent.replaceChild(textNode, el);
+    });
+}
+
+
+colorPicker.addEventListener("click", (event) => {
+    if (event.target.tagName === "BUTTON") {
+        // Remove border style from all buttons
+        const buttons = document.querySelectorAll("#colors-container button");
+        buttons.forEach((button) => {
+            button.style.border = "";
+        });
+
+        // Set border style on clicked button
+        event.target.style.border = "1px solid #000";
+
+        const color = event.target.dataset.color;
+        let onlyDisplayColors = [];
+        switch (color) {
+            case "blue-color":
+                onlyDisplayColors = defaultHighlights.filter(
+                    (hl) => hl.highlightColor === "blue-color"
+                );
+                renderHighlights("blue-color", onlyDisplayColors, defaultHighlights);
+                break;
+            case "yellow-color":
+                onlyDisplayColors = defaultHighlights.filter(
+                    (hl) => hl.highlightColor === "yellow-color"
+                );
+                renderHighlights("yellow-color", onlyDisplayColors, defaultHighlights);
+                break;
+            case "green-color":
+                onlyDisplayColors = defaultHighlights.filter(
+                    (hl) => hl.highlightColor === "green-color"
+                );
+                renderHighlights("green-color", onlyDisplayColors, defaultHighlights);
+                break;
+            case "orange-color":
+                onlyDisplayColors = defaultHighlights.filter(
+                    (hl) => hl.highlightColor === "orange-color"
+                );
+                renderHighlights("orange-color", onlyDisplayColors, defaultHighlights);
+                break;
+            case "red-color":
+                onlyDisplayColors = defaultHighlights.filter(
+                    (hl) => hl.highlightColor === "red-color"
+                );
+                renderHighlights("red-color", onlyDisplayColors, defaultHighlights);
+                break;
+            case "turn-transparent":
+                // const transparentHighlight = defaultHighlights.map(obj => ({ ...obj, highlightColor: 'turn-transparent' }));
+                renderHighlights("turn-transparent", [], defaultHighlights);
+                break;
+            case "delete-highlight":
+                renderHighlights("delete-highlight", defaultHighlights, defaultHighlights);
+            default:
+                break;
+        }
+    }
+});
+
+const highlighterContainer = document.querySelector(".highlighter-container");
+
+highlighterContainer.addEventListener("click", (event) => {
+    if (
+        event.target.classList.contains("brush-button") ||
+        event.target.closest(".brush-button")
+    ) {
+        brushButton();
+    }
+});
+
+function brushButton() {
+    // Render all remaining highlights
+    for (const highlight of defaultHighlights) {
+        renderHighlights(highlight.highlightColor, [highlight], defaultHighlights, true);
+    }
+}
+
+
+function Highlighter(paperEl, highlightClass = "is-highlighted") {
+
+    function generateTree(node, idx = 0) {
         let state = {
             el: node,
             index: idx,
@@ -71,7 +196,7 @@ function Highlighter(paperEl, highlightClass="is-highlighted") {
         if (!Array.isArray(highlights)) {
             highlights = [highlights]
         }
-        highlights.forEach((h) => {hl.allHighlights.push(h)});
+        highlights.forEach((h) => { hl.allHighlights.push(h) });
         const tree = generateTree(node);
         const sortedHighlights = sortHighlights(highlights);
         recursiveRender(tree, sortedHighlights);
@@ -110,10 +235,10 @@ function Highlighter(paperEl, highlightClass="is-highlighted") {
             }
             const highMap = relevant.reduce((map, h) => {
                 if (!(h.start in map)) {
-                    map[h.start] = {starts: 0, ends: 0};
+                    map[h.start] = { starts: 0, ends: 0 };
                 }
                 if (!(h.end in map)) {
-                    map[h.end] = {starts: 0, ends: 0};
+                    map[h.end] = { starts: 0, ends: 0 };
                 }
                 map[h.start].starts++;
                 map[h.end].ends++;
@@ -122,7 +247,7 @@ function Highlighter(paperEl, highlightClass="is-highlighted") {
             let html = ``;
             let i;
             for (i = 0; i <= node.text.length; i++) {
-                const site = highMap[startIdx + i] || {starts: 0, ends: 0};
+                const site = highMap[startIdx + i] || { starts: 0, ends: 0 };
                 if (site.starts > 0 || site.ends > 0) {
                     // console.log(startIdx + i, site);
                 }
@@ -162,7 +287,7 @@ function Highlighter(paperEl, highlightClass="is-highlighted") {
                         return res;
                     }
                 }
-            } 
+            }
         }
         return false;
     }
@@ -183,7 +308,7 @@ function Highlighter(paperEl, highlightClass="is-highlighted") {
             }
         }
         return res;
-    } 
+    }
 
     function captureHighlight(tree) {
         const sel = window.getSelection();
@@ -281,23 +406,33 @@ function Highlighter(paperEl, highlightClass="is-highlighted") {
             const high = captureHighlight(newTree);
             if (high) {
                 removeTooltips();
-                const tooltip = document.createElement("div");
-                tooltip.classList.add("is-tooltip");
-                tooltip.textContent = "Highlight";
-                tooltip.style.top = `${e.layerY + 20}px`;
-                tooltip.style.left = `${e.layerX - 20}px`;
-                tooltip.addEventListener("click", (e) => {
-                    // removeHighlights(paperEl);
-                    // renderHighlights(targetEl, [high]);
-                    removeTooltips();
-                    callback(high);
-                });
-                document.body.appendChild(tooltip);
+                if (colorButtonKeeper !== "turn-transparent") {
+                    const tooltip = document.createElement("div");
+                    tooltip.classList.add("is-tooltip");
+
+                    tooltip.classList.add(colorButtonKeeper + "-button");
+                    if (colorButtonKeeper !== "delete-highlight") {
+                        tooltip.textContent = "Highlight";
+                    }
+                    else {
+                        tooltip.textContent = "Dis-highlight";
+                    }
+                    tooltip.style.top = `${e.layerY + 20}px`;
+                    tooltip.style.left = `${e.layerX - 20}px`;
+                    tooltip.addEventListener("click", (e) => {
+                        // removeHighlights(paperEl);
+                        // renderHighlights(targetEl, [high]);
+                        removeTooltips();
+                        callback(high);
+                    });
+                    document.body.appendChild(tooltip);
+                }
+
             }
         }
     }
 
-    let hlState = {allHighlights: []};
+    let hlState = { allHighlights: [] };
 
     let hl = {
         renderHighlights: (highlights) => renderHighlights(hlState, paperEl, highlights),
