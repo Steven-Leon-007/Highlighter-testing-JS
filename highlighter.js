@@ -18,21 +18,35 @@ function renderHighlights(colorSelected, onHighlightArray, allHighlights, isFrom
 
     else {
         highlighter.renderHighlights(onHighlightArray);
+
+        if (colorSelected === "delete-highlight") {
+            for (const highlight of defaultHighlights) {
+                renderHighlights(highlight.highlightColor, [highlight], defaultHighlights, true);
+                colorButtonKeeper = "delete-highlight";
+            }
+        }
+
         highlighter.onHighlight((highlight) => {
             if (colorSelected === "delete-highlight") {
                 for (const findForHighlight of defaultHighlights) {
                     if (findForHighlight.start === highlight.start && findForHighlight.end === highlight.end) {
                         const indexToDelete = defaultHighlights.findIndex(obj => obj.start === highlight.start);
                         defaultHighlights.splice(indexToDelete, 1);
+                        transparentHighlights();
+                        reClickTransparent();
                     }
                     else if (highlight.start >= findForHighlight.start && highlight.end <= findForHighlight.end) {
                         const indexToDelete = defaultHighlights.findIndex(obj => highlight.start >= obj.start && highlight.end <= obj.end);
                         defaultHighlights.splice(indexToDelete, 1);
+                        transparentHighlights();
+                        reClickTransparent();
                     }
                 }
             }
-            highlight.highlightColor = colorSelected;
-            highlighter.renderHighlights(highlight);
+            else {
+                highlight.highlightColor = colorSelected;
+                highlighter.renderHighlights(highlight);
+            }
             allHighlights.push(highlight);
         }, colorSelected);
     }
@@ -47,6 +61,14 @@ function transparentHighlights() {
     });
 }
 
+const clickTransparent = document.querySelector(".hide li:nth-child(6) button");
+clickTransparent.addEventListener("click", () => {
+    // Do nothing, just handle the click event
+  });
+
+function reClickTransparent() {
+    clickTransparent.click();
+}
 
 colorPicker.addEventListener("click", (event) => {
     if (event.target.tagName === "BUTTON") {
@@ -93,11 +115,10 @@ colorPicker.addEventListener("click", (event) => {
                 renderHighlights("red-color", onlyDisplayColors, defaultHighlights);
                 break;
             case "turn-transparent":
-                // const transparentHighlight = defaultHighlights.map(obj => ({ ...obj, highlightColor: 'turn-transparent' }));
                 renderHighlights("turn-transparent", [], defaultHighlights);
                 break;
             case "delete-highlight":
-                renderHighlights("delete-highlight", defaultHighlights, defaultHighlights);
+                renderHighlights("delete-highlight", [], defaultHighlights);
             default:
                 break;
         }

@@ -125,15 +125,15 @@ body {
 }
 
 .hide li:nth-child(6) button {
-    background-image: url(transparency-grid.svg);
-    background-size: contain;
+    background-image: url(dissapear-clear.svg);
+    background-size: 34px;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .hide li:nth-child(7) button {
-    background-image: url(dissapear-clear.svg);
-    background-size: 32px;
-    background-position: center;
-    background-repeat: no-repeat;
+    background-image: url(transparency-grid.svg);
+    background-size: contain;
 }
 
 .palette-selected {
